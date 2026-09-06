@@ -1,4 +1,5 @@
 import argparse
+import sys
 from pathlib import Path
 
 from .fixers import FIXERS
@@ -14,8 +15,15 @@ def _slug(text: str) -> str:
     return text.lower().replace(" ", "-").replace("_", "-")
 
 
+def _require_source_dir(path: Path):
+    if not path.is_dir():
+        print(f"error: {path} is not a directory", file=sys.stderr)
+        sys.exit(1)
+
+
 def cmd_scan(args):
     samples_root = Path(args.path).resolve()
+    _require_source_dir(samples_root)
     output_root = Path(args.output).resolve()
     output_root.mkdir(parents=True, exist_ok=True)
 
@@ -69,6 +77,7 @@ def cmd_scan(args):
 
 def cmd_report(args):
     samples_root = Path(args.path).resolve()
+    _require_source_dir(samples_root)
     output_root = Path(args.output).resolve()
     output_root.mkdir(parents=True, exist_ok=True)
 
